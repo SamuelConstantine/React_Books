@@ -6,6 +6,8 @@ import Newsletter from "../../componentes/Newsletter"
 import TagsCategorias from "../../componentes/TagsCategorias"
 import Titulo from "../../componentes/Titulo"
 import { useQuery } from "@tanstack/react-query"
+import { useDestaques } from "../../graphql/destaques/hooks"
+
 
 import './Home.css'
 import { obterLivrosDestaque } from "../../http"
@@ -13,8 +15,8 @@ import { obterLivrosDestaque } from "../../http"
 const Home = () => {
     const [busca, setBusca] = useState("")
 
-    const { data: lancamentos } = useQuery(['destaques'], () => obterLivrosDestaque('lancamentos'))
-    const { data: maisVendidos } = useQuery(['maisVendidos'], () => obterLivrosDestaque('mais-vendidos'))
+    const response = useDestaques()
+
     return (<section className="home">
         <Banner subtitulo="Encontre em nossa estante o que precisa para seu desenvolvimento!" titulo="Já sabe por onde começar?">
             <form className="buscar">
@@ -28,9 +30,9 @@ const Home = () => {
             </form>
         </Banner>
         <Titulo texto="ÚLTIMOS LANÇAMENTOS"/>
-        <LivrosDestaque livros={lancamentos ?? []}/>
+        <LivrosDestaque livros={response?.lancamentos ?? []}/>
         <Titulo texto="MAIS VENDIDOS"/>
-        <LivrosDestaque livros={maisVendidos ?? []}/>
+        <LivrosDestaque livros={response?.maisVendidos ?? []}/>
         <TagsCategorias />
         <Newsletter />
     </section>)
